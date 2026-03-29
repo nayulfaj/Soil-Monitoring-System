@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Subura — Soil Monitoring Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="style.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside>
+  <div class="logo">
+    <div class="logo-icon">🌱</div>
+    Subura
+  </div>
+
+  <span class="nav-section-label">Overview</span>
+  <nav>
+    <a href="#" class="active nav-link" data-page="dashboard"><span class="icon">🏠</span> Dashboard</a>
+    <a href="#" class="nav-link" data-page="analitik"><span class="icon">📊</span> Analitik</a>
+    <a href="#" class="nav-link" data-page="kesehatan"><span class="icon">🌿</span> Kesehatan Tanah</a>
+    <a href="#" class="nav-link" data-page="history"><span class="icon">🗂️</span> Data History</a>
+  </nav>
+
+  <span class="nav-section-label">Monitoring</span>
+  <nav>
+    <a href="#" class="nav-link" data-page="monitoring"><span class="icon">💧</span> Sensor Tanah</a>
+    <a href="#" class="nav-link" data-page="lingkungan"><span class="icon">🌦️</span> Lingkungan</a>
+  </nav>
+
+  <span class="nav-section-label">System</span>
+  <nav>
+    <a href="#" class="nav-link" data-page="system"><span class="icon">📡</span> Status Perangkat</a>
+    <a href="#" class="nav-link" data-page="settings"><span class="icon">⚙️</span> Pengaturan</a>
+  </nav>
+
+  <div class="sidebar-bottom">
+    <div class="user-card">
+      <div class="avatar">RS</div>
+      <div class="user-info">
+        <div class="name">Rifa - Sabrina</div>
+        <div class="role">Field Engineer</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN CONTENT -->
+<main>
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div>
+      <div class="page-title" id="pageTitle">Dashboard</div>
+      <div class="page-subtitle" id="pageSubtitle">Monitoring Tanah & Lingkungan — Node Sawah</div>
+    </div>
+    <div class="topbar-right">
+      <div class="search-bar">
+        <span>🔍</span>
+        <input type="text" placeholder="Cari..."/>
+      </div>
+      <div class="icon-btn">🔔</div>
+      <div class="theme-toggle" id="themeToggle">
+        <div class="toggle-track"><div class="toggle-knob"></div></div>
+        <span id="toggleLabel">🌙 Gelap</span>
+      </div>
+      <div class="live-badge"><div class="live-dot"></div> Live</div>
+    </div>
+  </div>
+
+  <!-- =================== DASHBOARD PAGE =================== -->
+  <div class="page active" id="page-dashboard">
+
+    <!-- ROW 1: Weather + Summary Table -->
+    <div class="dash-row1">
+      <!-- Weather Card -->
+      <div class="card weather-card" style="position:relative;overflow:hidden;">
+        <div class="blob" style="width:120px;height:120px;background:var(--accent);top:-30px;right:-20px;"></div>
+        <div class="card-label">Lingkungan Hari Ini</div>
+        <div class="weather-date">Kamis</div>
+        <div class="weather-sub">5 Mar 2026</div>
+        <div style="display:flex;align-items:flex-end;gap:8px;">
+          <div class="weather-temp">29°C</div>
+          <div style="font-size:13px;color:var(--text-muted);padding-bottom:8px;">Temperatur Udara</div>
+        </div>
+        <div style="font-size:13px;color:var(--text-muted);margin-top:2px;">Berawan · Lembab</div>
+        <div class="weather-stats">
+          <div class="weather-stat">🌬️ <strong>2.4 km/h</strong></div>
+          <div class="weather-stat">💧 <strong>78%</strong> RH</div>
+          <div class="weather-stat">🌡️ <strong>1008 hPa</strong></div>
+        </div>
+        <div class="weather-donut" style="position:absolute;right:20px;top:20px;">
+          <svg class="donut-svg" viewBox="0 0 80 80">
+            <circle cx="40" cy="40" r="30" fill="none" stroke="var(--border)" stroke-width="8"/>
+            <circle cx="40" cy="40" r="30" fill="none" stroke="var(--accent)" stroke-width="8"
+              stroke-dasharray="141.3" stroke-dashoffset="35" stroke-linecap="round"/>
+          </svg>
+          <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;">
+            <div style="font-size:13px;font-weight:700;color:var(--accent);font-family:'Syne',sans-serif;">78%</div>
+            <div style="font-size:9px;color:var(--text-muted);">RH</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Summary Table -->
+      <div class="card" style="padding:20px;">
+        <div class="card-label" style="margin-bottom:12px;">Ringkasan Sensor</div>
+        <table class="summary-table">
+          <thead>
+            <tr>
+              <th>Parameter</th>
+              <th>Nilai</th>
+              <th>Satuan</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Kelembaban Tanah</td><td class="val-strong" style="color:var(--accent)">63</td><td>%</td><td><span class="card-status status-good" style="margin:0;padding:2px 7px;"><span class="status-dot"></span> Optimal</span></td></tr>
+            <tr><td>Temperatur Tanah</td><td class="val-strong" style="color:var(--accent-yellow)">27</td><td>°C</td><td><span class="card-status status-good" style="margin:0;padding:2px 7px;"><span class="status-dot"></span> Normal</span></td></tr>
+            <tr><td>pH Tanah</td><td class="val-strong" style="color:var(--accent-yellow)">6.8</td><td>—</td><td><span class="card-status status-good" style="margin:0;padding:2px 7px;"><span class="status-dot"></span> Optimal</span></td></tr>
+            <tr><td>EC Tanah</td><td class="val-strong" style="color:var(--accent-purple)">1.4</td><td>mS/cm</td><td><span class="card-status status-good" style="margin:0;padding:2px 7px;"><span class="status-dot"></span> Normal</span></td></tr>
+            <tr><td>Nitrogen (N)</td><td class="val-strong" style="color:var(--accent)">142</td><td>mg/kg</td><td><span class="card-status status-good" style="margin:0;padding:2px 7px;"><span class="status-dot"></span> Optimal</span></td></tr>
+            <tr><td>Fosfor (P)</td><td class="val-strong" style="color:var(--accent-yellow)">67</td><td>mg/kg</td><td><span class="card-status status-warn" style="margin:0;padding:2px 7px;"><span class="status-dot"></span> Sedang</span></td></tr>
+            <tr><td>Kalium (K)</td><td class="val-strong" style="color:var(--accent-blue)">198</td><td>mg/kg</td><td><span class="card-status status-good" style="margin:0;padding:2px 7px;"><span class="status-dot"></span> Optimal</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ROW 2: NPK Cards -->
+    <div class="dash-row2">
+      <div class="card npk-card npk-n">
+        <div class="card-label">Nitrogen (N)</div>
+        <div class="card-value">142 <span class="card-unit">mg/kg</span></div>
+        <div class="card-status status-good"><span class="status-dot"></span> Optimal</div>
+        <div class="npk-bar" style="margin-top:14px;"><div class="npk-fill" style="width:71%;"></div></div>
+        <div class="npk-label-row"><span>0</span><span>71%</span><span>200</span></div>
+        <div style="margin-top:12px;font-size:12px;color:var(--text-muted);">Rentang ideal: 100–200 mg/kg</div>
+      </div>
+      <div class="card npk-card npk-p">
+        <div class="card-label">Phosphorus (P)</div>
+        <div class="card-value">67 <span class="card-unit">mg/kg</span></div>
+        <div class="card-status status-warn"><span class="status-dot"></span> Moderate</div>
+        <div class="npk-bar" style="margin-top:14px;"><div class="npk-fill" style="width:44.6%;"></div></div>
+        <div class="npk-label-row"><span>0</span><span>45%</span><span>150</span></div>
+        <div style="margin-top:12px;font-size:12px;color:var(--text-muted);">Rentang ideal: 50–120 mg/kg</div>
+      </div>
+      <div class="card npk-card npk-k">
+        <div class="card-label">Potassium (K)</div>
+        <div class="card-value">198 <span class="card-unit">mg/kg</span></div>
+        <div class="card-status status-good"><span class="status-dot"></span> Optimal</div>
+        <div class="npk-bar" style="margin-top:14px;"><div class="npk-fill" style="width:82%;"></div></div>
+        <div class="npk-label-row"><span>0</span><span>82%</span><span>240</span></div>
+        <div style="margin-top:12px;font-size:12px;color:var(--text-muted);">Rentang ideal: 150–250 mg/kg</div>
+      </div>
+    </div>
+
+    <!-- ROW 3: Soil Trend + Gambaran Umum -->
+    <div class="dash-row3">
+      <div class="card chart-card">
+        <div class="chart-header">
+          <div>
+            <div class="chart-title">Soil Parameter Trend</div>
+            <div class="chart-legend">
+              <div class="legend-item"><div class="legend-dot" style="background:var(--accent)"></div> Kelembaban</div>
+              <div class="legend-item"><div class="legend-dot" style="background:var(--accent-yellow)"></div> Temperatur</div>
+              <div class="legend-item"><div class="legend-dot" style="background:var(--accent-blue)"></div> pH</div>
+            </div>
+          </div>
+          <div class="tab-group">
+            <button class="tab-btn active">24 Jam</button>
+            <button class="tab-btn">7 Hari</button>
+            <button class="tab-btn">30 Hari</button>
+          </div>
+        </div>
+        <canvas id="trendChart" height="160"></canvas>
+      </div>
+      <div class="card" style="padding:20px;">
+        <div class="card-label" style="margin-bottom:14px;">Gambaran Umum Tanah</div>
+        <div class="soil-overview">
+          <div class="soil-metric">
+            <div class="soil-metric-icon">💧</div>
+            <div class="soil-metric-val">63<small style="font-size:13px;color:var(--text-muted)">%</small></div>
+            <div class="soil-metric-name">Kelembapan</div>
+            <svg class="mini-ring" viewBox="0 0 36 36">
+              <circle cx="18" cy="18" r="14" fill="none" stroke="var(--surface2)" stroke-width="3"/>
+              <circle cx="18" cy="18" r="14" fill="none" stroke="var(--accent)" stroke-width="3"
+                stroke-dasharray="88" stroke-dashoffset="32" stroke-linecap="round" transform="rotate(-90 18 18)"/>
+            </svg>
+          </div>
+          <div class="soil-metric" style="border:1px solid rgba(122,146,0,0.25)">
+            <div class="soil-metric-icon">🌡️</div>
+            <div class="soil-metric-val" style="color:var(--accent-yellow)">27<small style="font-size:13px;color:var(--text-muted)">°C</small></div>
+            <div class="soil-metric-name">Temperatur Tanah</div>
+            <svg class="mini-ring" viewBox="0 0 36 36">
+              <circle cx="18" cy="18" r="14" fill="none" stroke="var(--surface2)" stroke-width="3"/>
+              <circle cx="18" cy="18" r="14" fill="none" stroke="var(--accent-yellow)" stroke-width="3"
+                stroke-dasharray="88" stroke-dashoffset="44" stroke-linecap="round" transform="rotate(-90 18 18)"/>
+            </svg>
+          </div>
+          <div class="soil-metric" style="border:1px solid rgba(122,146,0,0.25)">
+            <div class="soil-metric-icon">⚗️</div>
+            <div class="soil-metric-val ph-value">6.8</div>
+            <div class="soil-metric-name">Level pH</div>
+            <svg class="mini-ring" viewBox="0 0 36 36">
+              <circle cx="18" cy="18" r="14" fill="none" stroke="var(--surface2)" stroke-width="3"/>
+              <circle cx="18" cy="18" r="14" fill="none" stroke="var(--accent-yellow)" stroke-width="3"
+                stroke-dasharray="88" stroke-dashoffset="26" stroke-linecap="round" transform="rotate(-90 18 18)"/>
+            </svg>
+          </div>
+          <div class="soil-metric" style="border:1px solid rgba(124,46,201,0.2)">
+            <div class="soil-metric-icon">⚡</div>
+            <div class="soil-metric-val ec-value">1.4<small style="font-size:12px;color:var(--text-muted)">mS</small></div>
+            <div class="soil-metric-name">Level EC</div>
+            <svg class="mini-ring" viewBox="0 0 36 36">
+              <circle cx="18" cy="18" r="14" fill="none" stroke="var(--surface2)" stroke-width="3"/>
+              <circle cx="18" cy="18" r="14" fill="none" stroke="var(--accent-purple)" stroke-width="3"
+                stroke-dasharray="88" stroke-dashoffset="50" stroke-linecap="round" transform="rotate(-90 18 18)"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ROW 4: Rain + DHT22 -->
+    <div class="dash-row4">
+      <div class="card rain-card">
+        <div class="card-label" style="color:var(--accent-blue);">Sensor Hujan</div>
+        <div class="rain-status-big" style="color:var(--accent-blue);">🌧️ Hujan</div>
+        <div style="font-size:12px;color:var(--accent-blue);opacity:0.8;">Terdeteksi · Intensitas: Menengah</div>
+        <div class="rain-animation">
+          <div class="rain-drop"></div><div class="rain-drop"></div><div class="rain-drop"></div>
+          <div class="rain-drop"></div><div class="rain-drop"></div>
+        </div>
+        <div style="margin-top:10px;font-size:11px;color:var(--text-muted);">Sejak 06:42 · Durasi 3j 14m</div>
+      </div>
+      <div class="card">
+        <div class="card-label">DHT22 · Udara</div>
+        <div style="display:flex;flex-direction:column;gap:12px;margin-top:8px;">
+          <div>
+            <div style="font-size:11px;color:var(--text-muted);">Temperatur</div>
+            <div style="font-family:'Syne',sans-serif;font-size:28px;font-weight:800;color:var(--accent-yellow);">29.4°C</div>
+          </div>
+          <div style="height:1px;background:var(--border);"></div>
+          <div>
+            <div style="font-size:11px;color:var(--text-muted);">Kelembapan</div>
+            <div style="font-family:'Syne',sans-serif;font-size:28px;font-weight:800;color:var(--accent-blue);">78%</div>
+          </div>
+        </div>
+        <div class="card-status status-good" style="margin-top:10px;"><span class="status-dot"></span> Nominal</div>
+      </div>
+    </div>
+
+    <!-- ROW 5: Device Status + Last Sync -->
+    <div class="dash-row5">
+      <!-- Device Status -->
+      <div class="card" style="grid-column: 1 / 3;">
+        <div class="card-label" style="margin-bottom:4px;">Status Perangkat</div>
+        <div class="node-list" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;">
+          <div class="node-item">
+            <div class="node-left"><div class="node-icon">📡</div><div><div class="node-name">NPK 7-in-1</div><div class="node-desc">Sensor Tanah · Node Sawah</div></div></div>
+            <div class="node-badge badge-online">Online</div>
+          </div>
+          <div class="node-item">
+            <div class="node-left"><div class="node-icon">🌡️</div><div><div class="node-name">DHT22</div><div class="node-desc">Temperatur Udara & Kelembaban</div></div></div>
+            <div class="node-badge badge-online">Online</div>
+          </div>
+          <div class="node-item">
+            <div class="node-left"><div class="node-icon">🌧️</div><div><div class="node-name">Sensor Hujan</div><div class="node-desc">Deteksi Curah Hujan</div></div></div>
+            <div class="node-badge badge-online">Online</div>
+          </div>
+          <div class="node-item">
+            <div class="node-left"><div class="node-icon">📶</div><div><div class="node-name">LoRa Gateway</div><div class="node-desc">GW01 · -72 dBm</div></div></div>
+            <div class="node-badge badge-online">Online</div>
+          </div>
+          <div class="node-item">
+            <div class="node-left"><div class="node-icon">🔋</div><div><div class="node-name">Baterai Node</div><div class="node-desc">Est. tersisa 14 hari</div></div></div>
+            <div style="font-size:13px;font-weight:700;color:var(--accent);">76%</div>
+          </div>
+          <div class="node-item">
+            <div class="node-left"><div class="node-icon">🖥️</div><div><div class="node-name">ESP32</div><div class="node-desc">MCU · IP: 192.168.1.42</div></div></div>
+            <div class="node-badge badge-online">Online</div>
+          </div>
+        </div>
+      </div>
+      <!-- Last Sync -->
+      <div class="card" style="background:var(--sync-grad);">
+        <div class="card-label">Sinkronisasi Terakhir</div>
+        <div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--text);margin:8px 0 4px;">08:27 AM</div>
+        <div style="font-size:12px;color:var(--text-muted);">5 Mar 2026</div>
+        <div style="margin-top:12px;font-size:12px;color:var(--text-muted);">Gateway: <span style="color:var(--accent);">LoRa · GW01</span></div>
+        <div style="margin-top:6px;font-size:12px;color:var(--text-muted);">RSSI: <span style="color:var(--accent);">-72 dBm</span></div>
+        <div style="margin-top:6px;font-size:12px;color:var(--text-muted);">SNR: <span style="color:var(--accent);">9.5 dB</span></div>
+        <div class="card-status status-good" style="margin-top:10px;"><span class="status-dot"></span> Terhubung</div>
+      </div>
+    </div>
+
+  </div><!-- /dashboard -->
+
+  <!-- =================== ANALITIK PAGE =================== -->
+  <div class="page" id="page-analitik">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+      <div>
+        <div style="font-size:13px;color:var(--text-muted);">Tampilan grafik sensor terhadap waktu</div>
+      </div>
+      <div class="time-range-row">
+        <button class="time-btn active" data-range="1h">1 Jam</button>
+        <button class="time-btn" data-range="24h">24 Jam</button>
+        <button class="time-btn" data-range="7d">7 Hari</button>
+        <button class="time-btn" data-range="30d">30 Hari</button>
+      </div>
+    </div>
+
+    <!-- Sensor Stats Grid -->
+    <div class="analytics-grid">
+      <div class="analytics-stat-card">
+        <div class="analytics-stat-label">Kelembaban Tanah</div>
+        <div class="analytics-stat-val">63<span style="font-size:16px;color:var(--text-muted)">%</span></div>
+        <div class="analytics-stat-sub">Saat ini</div>
+        <div class="analytics-stat-row">
+          <span class="analytics-mini mini-avg">Avg 61%</span>
+          <span class="analytics-mini mini-min">Min 52%</span>
+          <span class="analytics-mini mini-max">Max 68%</span>
+        </div>
+      </div>
+      <div class="analytics-stat-card">
+        <div class="analytics-stat-label">Temperatur Tanah</div>
+        <div class="analytics-stat-val">27<span style="font-size:16px;color:var(--text-muted)">°C</span></div>
+        <div class="analytics-stat-sub">Saat ini</div>
+        <div class="analytics-stat-row">
+          <span class="analytics-mini mini-avg">Avg 25.8°</span>
+          <span class="analytics-mini mini-min">Min 22°</span>
+          <span class="analytics-mini mini-max">Max 28°</span>
+        </div>
+      </div>
+      <div class="analytics-stat-card">
+        <div class="analytics-stat-label">pH Tanah</div>
+        <div class="analytics-stat-val">6.8</div>
+        <div class="analytics-stat-sub">Saat ini</div>
+        <div class="analytics-stat-row">
+          <span class="analytics-mini mini-avg">Avg 6.7</span>
+          <span class="analytics-mini mini-min">Min 6.4</span>
+          <span class="analytics-mini mini-max">Max 7.0</span>
+        </div>
+      </div>
+      <div class="analytics-stat-card">
+        <div class="analytics-stat-label">EC Tanah</div>
+        <div class="analytics-stat-val">1.4<span style="font-size:16px;color:var(--text-muted)">mS</span></div>
+        <div class="analytics-stat-sub">Saat ini</div>
+        <div class="analytics-stat-row">
+          <span class="analytics-mini mini-avg">Avg 1.3</span>
+          <span class="analytics-mini mini-min">Min 1.0</span>
+          <span class="analytics-mini mini-max">Max 1.7</span>
+        </div>
+      </div>
+      <div class="analytics-stat-card">
+        <div class="analytics-stat-label">Nitrogen (N)</div>
+        <div class="analytics-stat-val">142<span style="font-size:14px;color:var(--text-muted)"> mg/kg</span></div>
+        <div class="analytics-stat-sub">Saat ini</div>
+        <div class="analytics-stat-row">
+          <span class="analytics-mini mini-avg">Avg 138</span>
+          <span class="analytics-mini mini-min">Min 120</span>
+          <span class="analytics-mini mini-max">Max 155</span>
+        </div>
+      </div>
+      <div class="analytics-stat-card">
+        <div class="analytics-stat-label">Fosfor (P)</div>
+        <div class="analytics-stat-val">67<span style="font-size:14px;color:var(--text-muted)"> mg/kg</span></div>
+        <div class="analytics-stat-sub">Saat ini</div>
+        <div class="analytics-stat-row">
+          <span class="analytics-mini mini-avg">Avg 65</span>
+          <span class="analytics-mini mini-min">Min 55</span>
+          <span class="analytics-mini mini-max">Max 78</span>
+        </div>
+      </div>
+      <div class="analytics-stat-card">
+        <div class="analytics-stat-label">Kalium (K)</div>
+        <div class="analytics-stat-val">198<span style="font-size:14px;color:var(--text-muted)"> mg/kg</span></div>
+        <div class="analytics-stat-sub">Saat ini</div>
+        <div class="analytics-stat-row">
+          <span class="analytics-mini mini-avg">Avg 192</span>
+          <span class="analytics-mini mini-min">Min 170</span>
+          <span class="analytics-mini mini-max">Max 210</span>
+        </div>
+      </div>
+      <div class="analytics-stat-card">
+        <div class="analytics-stat-label">Temperatur Udara</div>
+        <div class="analytics-stat-val">29<span style="font-size:16px;color:var(--text-muted)">°C</span></div>
+        <div class="analytics-stat-sub">Saat ini</div>
+        <div class="analytics-stat-row">
+          <span class="analytics-mini mini-avg">Avg 27°</span>
+          <span class="analytics-mini mini-min">Min 22°</span>
+          <span class="analytics-mini mini-max">Max 32°</span>
+        </div>
+      </div>
+      <div class="analytics-stat-card">
+        <div class="analytics-stat-label">Kelembaban Udara</div>
+        <div class="analytics-stat-val">78<span style="font-size:16px;color:var(--text-muted)">%</span></div>
+        <div class="analytics-stat-sub">Saat ini</div>
+        <div class="analytics-stat-row">
+          <span class="analytics-mini mini-avg">Avg 74%</span>
+          <span class="analytics-mini mini-min">Min 65%</span>
+          <span class="analytics-mini mini-max">Max 88%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sensor Selector + Chart -->
+    <div class="full-chart-card">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px;">
+        <div>
+          <div class="chart-title">Tren Sensor</div>
+          <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">Pilih sensor untuk ditampilkan:</div>
+        </div>
+      </div>
+      <div class="sensor-select-row" id="sensorChips">
+        <button class="sensor-chip active" data-sensor="moisture">💧 Kelembaban</button>
+        <button class="sensor-chip active" data-sensor="soiltemp">🌡️ Suhu Tanah</button>
+        <button class="sensor-chip" data-sensor="ph">⚗️ pH</button>
+        <button class="sensor-chip" data-sensor="ec">⚡ EC</button>
+        <button class="sensor-chip" data-sensor="n">🟢 Nitrogen</button>
+        <button class="sensor-chip" data-sensor="p">🟡 Fosfor</button>
+        <button class="sensor-chip" data-sensor="k">🔵 Kalium</button>
+        <button class="sensor-chip" data-sensor="airtemp">☀️ Suhu Udara</button>
+        <button class="sensor-chip" data-sensor="airhumid">🌬️ Kelembaban Udara</button>
+      </div>
+      <canvas id="analyticsChart" height="140"></canvas>
+    </div>
+  </div><!-- /analitik -->
+
+  <!-- =================== KESEHATAN TANAH PAGE =================== -->
+  <div class="page" id="page-kesehatan">
+    <!-- Score Header -->
+    <div class="card" style="margin-bottom:20px;display:flex;align-items:center;gap:30px;">
+      <div class="health-score-wrap" style="padding:0;">
+        <div class="health-score">82</div>
+        <div class="health-label">Nilai Kesehatan</div>
+        <div class="card-status status-good" style="justify-content:center;margin-top:8px;"><span class="status-dot"></span> Baik</div>
+      </div>
+      <div style="flex:1;">
+        <div style="font-size:13px;color:var(--text-muted);line-height:1.6;">
+          Kondisi tanah secara keseluruhan dalam kondisi <strong style="color:var(--accent)">baik</strong>. Kadar fosfor perlu perhatian. Semua parameter kritis (pH, kelembaban, nitrogen, kalium) berada di rentang optimal.
+        </div>
+        <div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;">
+          <span style="font-size:12px;padding:4px 10px;border-radius:10px;background:rgba(43,158,70,0.1);color:var(--accent);font-weight:600;">5 Parameter Optimal</span>
+          <span style="font-size:12px;padding:4px 10px;border-radius:10px;background:rgba(122,146,0,0.1);color:var(--accent-yellow);font-weight:600;">1 Perlu Perhatian</span>
+          <span style="font-size:12px;padding:4px 10px;border-radius:10px;background:rgba(201,79,42,0.1);color:var(--accent-red);font-weight:600;">0 Kritis</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="health-page-grid">
+      <!-- Parameter Status List -->
+      <div>
+        <div class="section-divider"><div class="section-divider-line"></div><div class="section-divider-label">Status Parameter Sensor Tanah</div><div class="section-divider-line"></div></div>
+        <div class="param-list">
+          <div class="param-item optimal">
+            <div class="param-left"><div class="param-name">💧 Kelembaban Tanah</div><div class="param-val">63% · Ideal: 50–80%</div></div>
+            <span class="param-status s-optimal">Optimal</span>
+          </div>
+          <div class="param-item optimal">
+            <div class="param-left"><div class="param-name">🌡️ Temperatur Tanah</div><div class="param-val">27°C · Ideal: 15–30°C</div></div>
+            <span class="param-status s-optimal">Optimal</span>
+          </div>
+          <div class="param-item optimal">
+            <div class="param-left"><div class="param-name">⚗️ pH Tanah</div><div class="param-val">6.8 · Ideal: 6.0–7.0</div></div>
+            <span class="param-status s-optimal">Optimal</span>
+          </div>
+          <div class="param-item optimal">
+            <div class="param-left"><div class="param-name">⚡ EC Tanah</div><div class="param-val">1.4 mS/cm · Ideal: 0.8–2.0 mS/cm</div></div>
+            <span class="param-status s-optimal">Optimal</span>
+          </div>
+          <div class="param-item optimal">
+            <div class="param-left"><div class="param-name">🟢 Nitrogen (N)</div><div class="param-val">142 mg/kg · Ideal: 100–200 mg/kg</div></div>
+            <span class="param-status s-optimal">Optimal</span>
+          </div>
+          <div class="param-item sedang">
+            <div class="param-left"><div class="param-name">🟡 Fosfor (P)</div><div class="param-val">67 mg/kg · Ideal: 50–120 mg/kg (batas bawah)</div></div>
+            <span class="param-status s-sedang">Perlu Perhatian</span>
+          </div>
+          <div class="param-item optimal">
+            <div class="param-left"><div class="param-name">🔵 Kalium (K)</div><div class="param-val">198 mg/kg · Ideal: 150–250 mg/kg</div></div>
+            <span class="param-status s-optimal">Optimal</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recommendations -->
+      <div>
+        <div class="section-divider"><div class="section-divider-line"></div><div class="section-divider-label">Rekomendasi Tindakan</div><div class="section-divider-line"></div></div>
+        <div class="rec-card">
+          <div class="rec-item">
+            <div class="rec-icon">🧪</div>
+            <div>
+              <div class="rec-title">Tambah Pupuk Fosfat</div>
+              <div class="rec-desc">Kadar fosfor (67 mg/kg) mendekati batas bawah ideal. Pertimbangkan penambahan pupuk TSP atau SP-36 dengan dosis 50–75 kg/ha dalam 7 hari ke depan.</div>
+              <span class="rec-urgency urgency-soon">Dalam 7 Hari</span>
+            </div>
+          </div>
+          <div class="rec-item">
+            <div class="rec-icon">💧</div>
+            <div>
+              <div class="rec-title">Pertahankan Irigasi</div>
+              <div class="rec-desc">Kelembaban tanah (63%) dalam kondisi optimal. Jadwal irigasi saat ini sudah tepat, pertahankan intensitas penyiraman.</div>
+              <span class="rec-urgency urgency-ok">Kondisi Baik</span>
+            </div>
+          </div>
+          <div class="rec-item">
+            <div class="rec-icon">📊</div>
+            <div>
+              <div class="rec-title">Pemantauan pH Berkala</div>
+              <div class="rec-desc">pH 6.8 sangat ideal untuk sebagian besar tanaman. Lakukan pengukuran ulang setiap 2 minggu untuk memastikan kestabilan.</div>
+              <span class="rec-urgency urgency-ok">Rutin</span>
+            </div>
+          </div>
+          <div class="rec-item">
+            <div class="rec-icon">🌿</div>
+            <div>
+              <div class="rec-title">Nitrogen Cukup</div>
+              <div class="rec-desc">Kadar nitrogen (142 mg/kg) optimal. Tidak perlu penambahan pupuk nitrogen saat ini. Evaluasi ulang pada masa pertumbuhan berikutnya.</div>
+              <span class="rec-urgency urgency-ok">Tidak Diperlukan</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><!-- /kesehatan -->
+
+  <!-- =================== DATA HISTORY PAGE =================== -->
+  <div class="page" id="page-history">
+    <div class="history-table-wrap">
+      <div class="history-toolbar">
+        <div class="history-title">Log Sensor — Per 20 Menit</div>
+        <div class="history-actions">
+          <input type="text" class="filter-input" placeholder="🔍 Filter tanggal..." id="historyFilter"/>
+          <button class="btn-download" onclick="downloadCSV()">⬇️ Download CSV</button>
+        </div>
+      </div>
+      <div class="history-table-scroll">
+        <table class="history-table" id="historyTable">
+          <thead>
+            <tr>
+              <th>Waktu</th>
+              <th>Kelembaban (%)</th>
+              <th>Suhu Tanah (°C)</th>
+              <th>pH</th>
+              <th>EC (mS/cm)</th>
+              <th>N (mg/kg)</th>
+              <th>P (mg/kg)</th>
+              <th>K (mg/kg)</th>
+              <th>Suhu Udara (°C)</th>
+              <th>Kelembaban Udara (%)</th>
+              <th>Hujan</th>
+            </tr>
+          </thead>
+          <tbody id="historyBody"></tbody>
+        </table>
+      </div>
+      <div class="history-pagination">
+        <div class="page-info" id="pageInfo">Menampilkan 1–20 dari 72 entri</div>
+        <div class="page-btns" id="pageBtns"></div>
+      </div>
+    </div>
+  </div><!-- /history -->
+
+  <!-- =================== MONITORING (SENSOR TANAH) PAGE =================== -->
+  <div class="page" id="page-monitoring">
+    <div class="monitoring-section">
+      <div class="monitoring-header">🌱 Sensor Tanah <span style="font-size:12px;color:var(--text-muted);font-weight:400;">NPK 7-in-1 · Node Sawah</span></div>
+      <div class="monitoring-grid">
+        <div class="raw-card">
+          <div class="raw-label">Kelembaban Tanah</div>
+          <div class="raw-val">63 <span class="raw-unit">%</span></div>
+          <div class="raw-bar"><div class="raw-bar-fill" style="width:63%;background:var(--accent)"></div></div>
+          <div class="raw-status"><span class="card-status status-good" style="margin:6px 0 0;"><span class="status-dot"></span> Optimal</span></div>
+          <div class="raw-updated">Diperbarui: 08:27 AM · 5 Mar 2026</div>
+        </div>
+        <div class="raw-card">
+          <div class="raw-label">Temperatur Tanah</div>
+          <div class="raw-val">27 <span class="raw-unit">°C</span></div>
+          <div class="raw-bar"><div class="raw-bar-fill" style="width:55%;background:var(--accent-yellow)"></div></div>
+          <div class="raw-status"><span class="card-status status-good" style="margin:6px 0 0;"><span class="status-dot"></span> Normal</span></div>
+          <div class="raw-updated">Diperbarui: 08:27 AM · 5 Mar 2026</div>
+        </div>
+        <div class="raw-card">
+          <div class="raw-label">pH Tanah</div>
+          <div class="raw-val">6.8</div>
+          <div class="raw-bar"><div class="raw-bar-fill" style="width:71%;background:var(--accent-yellow)"></div></div>
+          <div class="raw-status"><span class="card-status status-good" style="margin:6px 0 0;"><span class="status-dot"></span> Optimal</span></div>
+          <div class="raw-updated">Diperbarui: 08:27 AM · 5 Mar 2026</div>
+        </div>
+        <div class="raw-card">
+          <div class="raw-label">EC Tanah</div>
+          <div class="raw-val">1.4 <span class="raw-unit">mS/cm</span></div>
+          <div class="raw-bar"><div class="raw-bar-fill" style="width:56%;background:var(--accent-purple)"></div></div>
+          <div class="raw-status"><span class="card-status status-good" style="margin:6px 0 0;"><span class="status-dot"></span> Normal</span></div>
+          <div class="raw-updated">Diperbarui: 08:27 AM · 5 Mar 2026</div>
+        </div>
+        <div class="raw-card">
+          <div class="raw-label">Nitrogen (N)</div>
+          <div class="raw-val">142 <span class="raw-unit">mg/kg</span></div>
+          <div class="raw-bar"><div class="raw-bar-fill" style="width:71%;background:var(--accent)"></div></div>
+          <div class="raw-status"><span class="card-status status-good" style="margin:6px 0 0;"><span class="status-dot"></span> Optimal</span></div>
+          <div class="raw-updated">Diperbarui: 08:27 AM · 5 Mar 2026</div>
+        </div>
+        <div class="raw-card">
+          <div class="raw-label">Fosfor (P)</div>
+          <div class="raw-val">67 <span class="raw-unit">mg/kg</span></div>
+          <div class="raw-bar"><div class="raw-bar-fill" style="width:44.6%;background:var(--accent-yellow)"></div></div>
+          <div class="raw-status"><span class="card-status status-warn" style="margin:6px 0 0;"><span class="status-dot"></span> Sedang</span></div>
+          <div class="raw-updated">Diperbarui: 08:27 AM · 5 Mar 2026</div>
+        </div>
+        <div class="raw-card">
+          <div class="raw-label">Kalium (K)</div>
+          <div class="raw-val">198 <span class="raw-unit">mg/kg</span></div>
+          <div class="raw-bar"><div class="raw-bar-fill" style="width:82%;background:var(--accent-blue)"></div></div>
+          <div class="raw-status"><span class="card-status status-good" style="margin:6px 0 0;"><span class="status-dot"></span> Optimal</span></div>
+          <div class="raw-updated">Diperbarui: 08:27 AM · 5 Mar 2026</div>
+        </div>
+      </div>
+    </div>
+  </div><!-- /monitoring -->
+
+  <!-- =================== LINGKUNGAN PAGE =================== -->
+  <div class="page" id="page-lingkungan">
+    <div class="monitoring-section">
+      <div class="monitoring-header">🌡️ Sensor DHT22 <span style="font-size:12px;color:var(--text-muted);font-weight:400;">Temperatur & Kelembaban Udara</span></div>
+      <div class="monitoring-grid">
+        <div class="raw-card">
+          <div class="raw-label">Temperatur Udara</div>
+          <div class="raw-val">29.4 <span class="raw-unit">°C</span></div>
+          <div class="raw-bar"><div class="raw-bar-fill" style="width:65%;background:var(--accent-yellow)"></div></div>
+          <div class="raw-status"><span class="card-status status-good" style="margin:6px 0 0;"><span class="status-dot"></span> Nominal</span></div>
+          <div class="raw-updated">Diperbarui: 08:27 AM · 5 Mar 2026</div>
+        </div>
+        <div class="raw-card">
+          <div class="raw-label">Kelembaban Udara (RH)</div>
+          <div class="raw-val">78 <span class="raw-unit">%</span></div>
+          <div class="raw-bar"><div class="raw-bar-fill" style="width:78%;background:var(--accent-blue)"></div></div>
+          <div class="raw-status"><span class="card-status status-good" style="margin:6px 0 0;"><span class="status-dot"></span> Lembab</span></div>
+          <div class="raw-updated">Diperbarui: 08:27 AM · 5 Mar 2026</div>
+        </div>
+        <div class="raw-card">
+          <div class="raw-label">Heat Index</div>
+          <div class="raw-val">31.2 <span class="raw-unit">°C</span></div>
+          <div class="raw-bar"><div class="raw-bar-fill" style="width:70%;background:var(--accent-red)"></div></div>
+          <div class="raw-status"><span class="card-status status-warn" style="margin:6px 0 0;"><span class="status-dot"></span> Terasa Panas</span></div>
+          <div class="raw-updated">Diperbarui: 08:27 AM · 5 Mar 2026</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="monitoring-section">
+      <div class="monitoring-header">🌧️ Sensor Hujan <span style="font-size:12px;color:var(--text-muted);font-weight:400;">Deteksi Curah Hujan</span></div>
+      <div class="monitoring-grid">
+        <div class="raw-card" style="background:var(--rain-grad);">
+          <div class="raw-label" style="color:var(--accent-blue);">Status Hujan</div>
+          <div class="raw-val" style="color:var(--accent-blue);">🌧️ Hujan</div>
+          <div class="rain-animation" style="margin-top:10px;">
+            <div class="rain-drop"></div><div class="rain-drop"></div><div class="rain-drop"></div><div class="rain-drop"></div><div class="rain-drop"></div>
+          </div>
+          <div style="margin-top:8px;font-size:12px;color:var(--accent-blue);">Intensitas: Menengah</div>
+          <div class="raw-updated">Terdeteksi sejak 06:42 · Durasi 3j 14m</div>
+        </div>
+        <div class="raw-card">
+          <div class="raw-label">Nilai Analog Sensor</div>
+          <div class="raw-val">437 <span class="raw-unit">/ 1023</span></div>
+          <div class="raw-bar"><div class="raw-bar-fill" style="width:42.7%;background:var(--accent-blue)"></div></div>
+          <div style="font-size:11px;color:var(--text-muted);margin-top:6px;">0 = Hujan Lebat · 1023 = Tidak Hujan</div>
+          <div class="raw-updated">Diperbarui: 08:27 AM · 5 Mar 2026</div>
+        </div>
+        <div class="raw-card">
+          <div class="raw-label">Estimasi Curah Hujan</div>
+          <div class="raw-val">4.2 <span class="raw-unit">mm</span></div>
+          <div class="raw-bar"><div class="raw-bar-fill" style="width:42%;background:var(--accent-blue)"></div></div>
+          <div class="raw-status"><span class="card-status" style="margin:6px 0 0;background:rgba(11,143,176,0.1);color:var(--accent-blue);"><span class="status-dot" style="background:var(--accent-blue);"></span> Hujan Menengah</span></div>
+          <div class="raw-updated">Akumulasi hari ini</div>
+        </div>
+      </div>
+    </div>
+  </div><!-- /lingkungan -->
+
+  <!-- =================== SYSTEM PAGE =================== -->
+  <div class="page" id="page-system">
+    
+  </div><!-- /system -->
+
+  <!-- =================== SETTINGS PAGE =================== -->
+  <div class="page" id="page-settings">
+    
+  </div><!-- /settings -->
+
+</main>
+
+<script src="script.js"></script>
+</body>
+</html>
